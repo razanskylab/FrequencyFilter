@@ -67,13 +67,10 @@ classdef FilterClass < BaseClass
       % get strings expressing filter bandwidth or cutoff freq. for high pass
       % filter
       if numel(FC.freq) == 2
-        lowPassFreqStr = num_to_SI_string(FC.freq(1), 3);
-        highPassFreqStr = num_to_SI_string(FC.freq(2), 3);
-        FC.VPrintF('      Bandpass (%sHz to %sHz)\n', ...
-          lowPassFreqStr, highPassFreqStr);
+        FC.VPrintF('      Bandpass (%3.1f MHz to %3.1f MHz)\n', ...
+          FC.freq(1), FC.freq(2));
       else
-        highPassFreqStr = num_to_SI_string(FC.freq(1), 3);
-        FC.VPrintF('      Highpass (passband = %sHz)\n', highPassFreqStr);
+        FC.VPrintF('      Highpass (passband = %3.1f MHz)\n', FC.freq(1));
       end
 
       switch FC.filtType
