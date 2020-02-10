@@ -129,7 +129,7 @@ classdef FilterClass < BaseClass
 
       if FC.tech == 1% using faster FiltM funciton form Maltab file exchange
         % FC.VPrintF('   Filtering using FiltFiltM...')
-        usShots = FiltFiltM(FC.b, FC.a, usShots);
+        usShots = FiltFiltM(FC.b, FC.a, single(usShots));
       end
 
       usShots = cast(usShots, dataType); % restore data type to what it was before
