@@ -18,7 +18,7 @@ classdef FilterClass < BaseClass
     % 2 - Chebyshev Type I (cheby1)
 
     tech(1, 1) {mustBeNumeric, mustBeFinite} = 1;
-    % 0 - use matlab filtfilt
+    % 0 - use matlab filtfilt or filtfiltj
     % 1 - use file exchange filtfiltM - faster and accepts single
 
     filtMode = '2d'; % '2d' | '3d'
@@ -67,10 +67,10 @@ classdef FilterClass < BaseClass
       % get strings expressing filter bandwidth or cutoff freq. for high pass
       % filter
       if numel(FC.freq) == 2
-        FC.VPrintF('      Bandpass (%3.1f MHz to %3.1f MHz)\n', ...
-          FC.freq(1), FC.freq(2));
+        FC.VPrintF('      Bandpass (%sHz to %sHz)\n', ...
+          num2sip(FC.freq(1),3), num2sip(FC.freq(2),3));
       else
-        FC.VPrintF('      Highpass (passband = %3.1f MHz)\n', FC.freq(1));
+        FC.VPrintF('      Highpass (passband = %sHz)\n', num2sip(FC.freq(1),3));
       end
 
       switch FC.filtType
@@ -121,19 +121,19 @@ classdef FilterClass < BaseClass
 
       tic();
       dataType = class(usShots);
-
+      
       if FC.tech == 0% use matlab filtfilt which requires double and is slower
-        % FC.VPrintF('   Filtering using filtfilt...')
-        usShots = filtfilt(FC.b, FC.a, double(usShots));
+        FC.VPrintF('   Filtering using filtfiltj...')
+        usShots = filtfiltj(FC.b, FC.a, single(usShots));
       end
-
+      
       if FC.tech == 1% using faster FiltM funciton form Maltab file exchange
-        % FC.VPrintF('   Filtering using FiltFiltM...')
+        FC.VPrintF('   Filtering using FiltFiltM...')
         usShots = FiltFiltM(FC.b, FC.a, single(usShots));
       end
 
       usShots = cast(usShots, dataType); % restore data type to what it was before
-      FC.VPrintF('done in %2.2f s.\n', toc);
+      FC.VPrintF('done (%2.2fs).\n', toc);
     end
 
     % apply filter to volume %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
